@@ -221,25 +221,29 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
         [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
         [request addValue:@"application/json" forHTTPHeaderField:@"Accept"];
         NSURLSessionUploadTask *uploadContact = [self.session uploadTaskWithRequest:request fromData:jsonData completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        NSHTTPURLResponse *httpResp = (NSHTTPURLResponse*) response;
-        if (!error && httpResp.statusCode == 201) {
-            NSLog(@"Contact correctly created and pushed");
-        } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Creating Contact Error"
-                                                            message:[NSString stringWithFormat:@"HTTP Response Code: %d", httpResp.statusCode]
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles: nil];
-            [alert show];
-            }
+                NSHTTPURLResponse *httpResp = (NSHTTPURLResponse*) response;
+                if (!error && httpResp.statusCode == 201) {
+                    NSLog(@"Contact correctly created and pushed");
+                    //parse response data to extract contact id of the newly created one
+                    NSError *jsonError;
+                    NSArray *rawContact = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+                    if(!jsonError) {
+                        contact.contactID = [(NSDictionary*)rawContact objectForKey:@"_id"];
+                    }
+                } else {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Creating Contact Error"
+                                                                    message:[NSString stringWithFormat:@"HTTP Response Code: %d", httpResp.statusCode]
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"OK"
+                                                          otherButtonTitles: nil];
+                    [alert show];
+                }
         }];
         [uploadContact resume];
     }
     //Update current "local list" on the app
     [self.contacts addObject:contact];
-    [self.contacts sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-        return [((Contact*)obj1).surname compare:((Contact*)obj2).surname];
-    }];
+    
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.contacts indexOfObject:contact] inSection:0];
     [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     [self dismissViewControllerAnimated:YES completion:nil];
