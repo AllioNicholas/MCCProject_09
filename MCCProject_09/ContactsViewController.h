@@ -13,6 +13,7 @@
 @interface ContactsViewController : UITableViewController <NSURLSessionDelegate, AddContactViewControllerDelegate>
 
 -(void)parseJSONWithData:(NSData*)data;
+- (IBAction)mergeContacts:(id)sender;
 
 @end
 

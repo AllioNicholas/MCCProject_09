@@ -172,6 +172,10 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
     }
 }
 
+- (IBAction)mergeContacts:(id)sender {
+    //TODO: implement merging of contacts
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
