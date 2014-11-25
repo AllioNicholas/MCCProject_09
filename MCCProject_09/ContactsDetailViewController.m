@@ -8,6 +8,8 @@
 
 #import "ContactsDetailViewController.h"
 
+@import AddressBook;
+
 @interface ContactsDetailViewController ()
 @end
 
@@ -41,4 +43,18 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)saveToAddressBook:(id)sender {
+    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized){
+        //Add to the local address book
+        
+        
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Add Contact"
+                                                        message:@"You must give the app permission to add the contact first: go to Settings->MCCProject_09 and allow access."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles: nil];
+        [alert show];
+    }
+}
 @end

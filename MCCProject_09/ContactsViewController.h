@@ -10,7 +10,7 @@
 #import <AddressBook/AddressBook.h>
 #import "AddContactTableViewController.h"
 
-@interface ContactsViewController : UITableViewController <NSURLSessionDelegate, AddContactViewControllerDelegate>
+@interface ContactsViewController : UITableViewController <NSURLSessionDelegate, AddContactViewControllerDelegate> 
 
 -(void)parseJSONWithData:(NSData*)data;
 - (IBAction)mergeContacts:(id)sender;

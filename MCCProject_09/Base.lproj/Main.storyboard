@@ -8,10 +8,14 @@
         <!--Contacts-->
         <scene sceneID="cUi-kZ-frf">
             <objects>
-                <navigationController title="Contacts" id="rS3-R9-Ivy" sceneMemberID="viewController">
+                <navigationController title="Contacts" toolbarHidden="NO" id="rS3-R9-Ivy" sceneMemberID="viewController">
+                    <toolbarItems/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="yXu-0R-QUA">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="BJh-JI-SSG">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
                     <connections>
                         <segue destination="pGg-6v-bdr" kind="relationship" relationship="rootViewController" id="RxB-wf-QIq"/>
                     </connections>
@@ -28,17 +32,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <toolbar key="tableFooterView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="I4q-jT-zr6">
-                            <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                            <items>
-                                <barButtonItem title="Merge" id="G6E-It-C7a">
-                                    <connections>
-                                        <action selector="mergeContacts:" destination="pGg-6v-bdr" id="bSK-zu-FuS"/>
-                                    </connections>
-                                </barButtonItem>
-                            </items>
-                        </toolbar>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ContactCell" id="PAs-MW-1RH" customClass="ContactTableViewCell">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
@@ -92,6 +85,13 @@
                             <outlet property="delegate" destination="pGg-6v-bdr" id="Y6K-Cp-Qkv"/>
                         </connections>
                     </tableView>
+                    <toolbarItems>
+                        <barButtonItem title="Merge" id="oLX-m7-ub7">
+                            <connections>
+                                <action selector="mergeContacts:" destination="pGg-6v-bdr" id="4bI-Ds-Yph"/>
+                            </connections>
+                        </barButtonItem>
+                    </toolbarItems>
                     <navigationItem key="navigationItem" title="Contacts" id="tQt-TN-PWz">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="BPb-Mg-RFO">
                             <connections>
@@ -111,7 +111,7 @@
         <scene sceneID="BVl-fc-h7o">
             <objects>
                 <tableViewController id="rW1-Ac-dtB" customClass="AddContactTableViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="3V5-eY-ruR">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="static" style="grouped" separatorStyle="none" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="3V5-eY-ruR">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
@@ -173,6 +173,16 @@
                             <outlet property="delegate" destination="rW1-Ac-dtB" id="Cpm-9A-Rvu"/>
                         </connections>
                     </tableView>
+                    <toolbarItems>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="tfj-iz-AND"/>
+                        <barButtonItem title="Import from Address Book" id="51F-sW-xRG">
+                            <connections>
+                                <action selector="importContact:" destination="rW1-Ac-dtB" id="z7V-qF-utK"/>
+                                <segue destination="6jc-Ff-zfv" kind="presentation" identifier="importContactSegue" id="6L4-0h-cl9"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="Hjh-du-RPv"/>
+                    </toolbarItems>
                     <navigationItem key="navigationItem" title="New Contact" id="NUS-SQ-eFx">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="t9c-81-hiY">
                             <connections>
@@ -195,14 +205,63 @@
             </objects>
             <point key="canvasLocation" x="1353" y="-678"/>
         </scene>
+        <!--Select a contact-->
+        <scene sceneID="yqi-a7-M61">
+            <objects>
+                <tableViewController id="l9I-x3-LMJ" customClass="LocalContactsTableViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="nlc-P0-xhc">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="localContactCell" textLabel="dBc-xl-uFQ" style="IBUITableViewCellStyleDefault" id="AWO-gj-ZCM">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="AWO-gj-ZCM" id="iht-Ac-nrS">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="dBc-xl-uFQ">
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="l9I-x3-LMJ" id="tKV-yH-R6k"/>
+                            <outlet property="delegate" destination="l9I-x3-LMJ" id="jvz-TQ-Kw5"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Select a contact" id="6hP-YH-UZF">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="yEt-zf-dDm">
+                            <connections>
+                                <action selector="cancel:" destination="l9I-x3-LMJ" id="tnO-Oe-Oaa"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="E2j-IG-LuT">
+                            <connections>
+                                <action selector="done:" destination="l9I-x3-LMJ" id="oRj-Gc-RUO"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="j7V-wx-GQ0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2816" y="-675"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="Kd7-OS-ZUy">
             <objects>
-                <navigationController id="PHM-pC-3v3" sceneMemberID="viewController">
+                <navigationController toolbarHidden="NO" id="PHM-pC-3v3" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="hZ3-Jh-CKl">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="xX3-SU-C5n">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
                     <connections>
                         <segue destination="rW1-Ac-dtB" kind="relationship" relationship="rootViewController" id="bkC-DQ-p6f"/>
                     </connections>
@@ -250,6 +309,15 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <toolbarItems>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="ziy-Kz-skS"/>
+                        <barButtonItem title="Save to Address Book" id="gFk-ez-87A">
+                            <connections>
+                                <action selector="saveToAddressBook:" destination="Ah7-4n-0Wa" id="UhR-lw-inJ"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="CiZ-SF-JGw"/>
+                    </toolbarItems>
                     <navigationItem key="navigationItem" title="Detail" id="cra-N8-TIN"/>
                     <connections>
                         <outlet property="idLabel" destination="maf-Yq-UnK" id="3dw-UI-Fwj"/>
@@ -261,6 +329,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lrm-kH-fPn" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1343" y="64"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="4tQ-0X-WuL">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="6jc-Ff-zfv" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Umb-Ak-M80">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="l9I-x3-LMJ" kind="relationship" relationship="rootViewController" id="TVL-0c-A0G"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Vpb-8m-C6J" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2004" y="-675"/>
         </scene>
     </scenes>
 </document>

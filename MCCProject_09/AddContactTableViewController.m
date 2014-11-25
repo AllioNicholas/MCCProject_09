@@ -32,8 +32,24 @@
     [self.delegate addContactViewController:self didAddContact:contact];
 }
 
+- (void)importContact:(Contact *)contact toController:(LocalContactsTableViewController *)controller {
+
+}
+
+- (void)importContactDidCancel:(LocalContactsTableViewController *)controller {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:@"importContactSegue"]) {
+        UINavigationController *navigationController = segue.destinationViewController;
+        LocalContactsTableViewController *importContactViewController = [navigationController viewControllers][0];
+        importContactViewController.delegate = self;
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

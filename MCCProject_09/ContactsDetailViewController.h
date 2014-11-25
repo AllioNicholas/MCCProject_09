@@ -18,5 +18,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *surnameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *phoneLabel;
 
+- (IBAction)saveToAddressBook:(id)sender;
+
 @end
 

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LocalContactsTableViewController.h"
 
 @class AddContactTableViewController;
 @class Contact;
@@ -16,7 +17,7 @@
 - (void)addContactViewController:(AddContactTableViewController *)controller didAddContact:(Contact *)contact;
 @end
 
-@interface AddContactTableViewController : UITableViewController
+@interface AddContactTableViewController : UITableViewController <ImportContactDelegate>
 
 @property (nonatomic, weak) id <AddContactViewControllerDelegate> delegate;
 

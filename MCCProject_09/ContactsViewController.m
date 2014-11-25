@@ -94,11 +94,13 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
 // Prompt the user for access to their Address Book data
 -(void)requestAddressBookAccess {
     ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
-                                                 if (granted) {
-                                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                                         NSLog(@"Access granted");
-                                                         [self addGroup:@"MCCGroup09" fromAddressBook:self.addressBook];
-                                                     });
+                                                 if (error) {
+                                                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                                                     message:@""
+                                                                                                    delegate:nil
+                                                                                           cancelButtonTitle:@"OK"
+                                                                                           otherButtonTitles: nil];
+                                                     [alert show];
                                                  }
                                              });
 }
@@ -119,9 +121,7 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
     NSString *contactString = [NSString stringWithFormat:@"%@/contacts", _masterURL];
     NSURL *contactURL = [NSURL URLWithString:contactString];
     
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    
-    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;    
     
     NSURLSessionDataTask *dataTask = [self.session dataTaskWithURL:contactURL
                                                  completionHandler:^(NSData *data,
@@ -137,6 +137,7 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
                                                                  [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
                                                                  [self.tableView reloadData];
                                                              });
+//                                                             [spinner stopAnimating];
                                                          } else if (httpResp.statusCode == 500) {
                                                              UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Internal Server Error"
                                                                                                              message:[NSString stringWithFormat:@"HTTP Response Code: %d", httpResp.statusCode]
@@ -173,7 +174,28 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
 }
 
 - (IBAction)mergeContacts:(id)sender {
-    //TODO: implement merging of contacts
+    //Merge contacts with side effect
+    NSURL *postURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/contacts/merge", _masterURL]];
+    NSMutableURLRequest *mergeRequest = [[NSMutableURLRequest alloc] initWithURL:postURL];
+    [mergeRequest setHTTPMethod:@"POST"];
+    NSURLSessionDataTask *merge = [self.session dataTaskWithRequest:mergeRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSHTTPURLResponse *httpResp = (NSHTTPURLResponse*) response;
+        if (!error && httpResp.statusCode == 200) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+                [self refreshTable];
+            });
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Connection Error"
+                                                            message:[NSString stringWithFormat:@"HTTP Response Code: %d", httpResp.statusCode]
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles: nil];
+            [alert show];
+        }
+    }];
+    
+    [merge resume];
 }
 
 - (void)didReceiveMemoryWarning {
