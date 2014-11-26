@@ -19,6 +19,8 @@
 @interface LocalContactsTableViewController : UITableViewController
 
 @property (nonatomic, weak) id <ImportContactDelegate> delegate;
+@property (strong,nonatomic) NSArray *contactsArray;
+@property (strong, nonatomic) NSMutableArray *filteredContactsArray;
 
 - (IBAction)cancel:(id)sender;
 - (IBAction)done:(id)sender;

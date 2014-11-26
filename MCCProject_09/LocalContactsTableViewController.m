@@ -12,36 +12,47 @@
 #import <AddressBook/AddressBook.h>
 
 
-@interface LocalContactsTableViewController () {
+@interface LocalContactsTableViewController () <UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating> {
     Contact *_importContact;
-    CFArrayRef _people;
-    CFIndex _numPeople;
 }
+
+@property (nonatomic, strong) UISearchController *searchController;
+
 
 @end
 
 @implementation LocalContactsTableViewController
 
+@synthesize contactsArray = _contactsArray;
+@synthesize filteredContactsArray = _filteredContactsArray;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, nil);
-
-    _people = ABAddressBookCopyArrayOfAllPeople(addressBook);
-    _numPeople = ABAddressBookGetPersonCount(addressBook);
-    
+    CFArrayRef _people = ABAddressBookCopyArrayOfAllPeople(addressBook);
     CFRelease(addressBook);
+    
+    self.contactsArray = [[NSArray alloc] initWithArray:(__bridge NSArray*)_people];
+    
+    self.searchController = [[UISearchController alloc] initWithSearchResultsController:self];
+    self.searchController.searchResultsUpdater = self;
+    [self.searchController.searchBar sizeToFit];
+    self.tableView.tableHeaderView = self.searchController.searchBar;
+    
+    self.searchController.delegate = self;
+    self.searchController.dimsBackgroundDuringPresentation = NO;
+    self.searchController.searchBar.delegate = self;
+    
+    self.definesPresentationContext = YES;
+    
+    self.filteredContactsArray = [[NSMutableArray alloc] initWithCapacity:self.contactsArray.count];
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (IBAction)cancel:(id)sender {
@@ -52,6 +63,12 @@
     [self.delegate importContact:_importContact toController:self];
 }
 
+#pragma mark - UISearchBarDelegate
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    [searchBar resignFirstResponder];
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -59,7 +76,11 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return _numPeople;
+    if ([self.searchController isActive]) {
+        return self.filteredContactsArray.count;
+    } else {
+        return self.contactsArray.count;
+    }
 }
 
 
@@ -67,46 +88,99 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"localContactCell" forIndexPath:indexPath];
     
     // Configure the cell...
-    ABRecordRef pers = CFArrayGetValueAtIndex(_people, indexPath.row);
+    ABRecordRef pers;
+    if ([self.searchController isActive]) {
+        pers = (__bridge ABRecordRef)([self.filteredContactsArray objectAtIndex:indexPath.row]);
+    } else {
+        pers = CFArrayGetValueAtIndex((__bridge CFArrayRef)self.contactsArray, indexPath.row);
+    }
+    
     cell.textLabel.text = (__bridge NSString *)(ABRecordCopyCompositeName(pers));
     
     return cell;
 }
 
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+//TODO:
+    //    APLProduct *selectedProduct = (tableView == self.tableView) ?
+//    self.products[indexPath.row] : self.resultsTableController.filteredProducts[indexPath.row];
+//    
+//    APLDetailViewController *detailViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"APLDetailViewController"];
+//    detailViewController.product = selectedProduct; // hand off the current product to the detail view controller
+//    
+//    [self.navigationController pushViewController:detailViewController animated:YES];
+//    
+//    // note: should not be necessary but current iOS 8.0 bug (seed 4) requires it
+//    [tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
+#pragma mark - UISearchResultsUpdating
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+    // update the filtered array based on the search text
+    NSString *searchText = searchController.searchBar.text;
+    NSMutableArray *searchResults = [self.contactsArray mutableCopy];
+    
+    // strip out all the leading and trailing spaces
+    NSString *strippedStr = [searchText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    
+    // break up the search terms (separated by spaces)
+    NSArray *searchContacts = nil;
+    if (strippedStr.length > 0) {
+        searchContacts = [strippedStr componentsSeparatedByString:@" "];
+    }
+    
+    // build all the "AND" expressions for each value in the searchString
+    //
+    NSMutableArray *andMatchPredicates = [NSMutableArray array];
+    
+    for (NSString *searchString in searchContacts) {
+        // each searchString creates an OR predicate for: name, yearIntroduced, introPrice
+        //
+        // example if searchItems contains "iphone 599 2007":
+        //      name CONTAINS[c] "iphone"
+        //      name CONTAINS[c] "599", yearIntroduced ==[c] 599, introPrice ==[c] 599
+        //      name CONTAINS[c] "2007", yearIntroduced ==[c] 2007, introPrice ==[c] 2007
+        //
+        NSMutableArray *searchContactsPredicate = [NSMutableArray array];
+        
+        // name field matching
+        NSExpression *nameLHS = [NSExpression expressionForKeyPath:@"name"];
+        NSExpression *nameRHS = [NSExpression expressionForConstantValue:searchString];
+        NSPredicate *finalNamePredicate = [NSComparisonPredicate
+                                       predicateWithLeftExpression:nameLHS
+                                       rightExpression:nameRHS
+                                       modifier:NSDirectPredicateModifier
+                                       type:NSContainsPredicateOperatorType
+                                       options:NSCaseInsensitivePredicateOption];
+        [searchContactsPredicate addObject:finalNamePredicate];
+        
+        // surname field matching
+        NSExpression *surnameLHS = [NSExpression expressionForKeyPath:@"surname"];
+        NSExpression *surnameRHS = [NSExpression expressionForConstantValue:searchString];
+        NSPredicate *finalSurnamePredicate = [NSComparisonPredicate
+                                       predicateWithLeftExpression:surnameLHS
+                                       rightExpression:surnameRHS
+                                       modifier:NSDirectPredicateModifier
+                                       type:NSContainsPredicateOperatorType
+                                       options:NSCaseInsensitivePredicateOption];
+        [searchContactsPredicate addObject:finalSurnamePredicate];
+        
+        // at this OR predicate to our master AND predicate
+        NSCompoundPredicate *orMatchPredicates = (NSCompoundPredicate *)[NSCompoundPredicate orPredicateWithSubpredicates:searchContactsPredicate];
+        [andMatchPredicates addObject:orMatchPredicates];
+    }
+    
+    NSCompoundPredicate *finalCompoundPredicate = nil;
+    
+    // match up the fields of the Product object
+    finalCompoundPredicate = (NSCompoundPredicate *)[NSCompoundPredicate andPredicateWithSubpredicates:andMatchPredicates];
+    searchResults = [[searchResults filteredArrayUsingPredicate:finalCompoundPredicate] mutableCopy];
+    
+    // hand over the filtered results to our search results table
+    self.filteredContactsArray = searchResults;
+    [self.tableView reloadData];
 }
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 /*
 #pragma mark - Navigation

@@ -208,6 +208,15 @@
         <!--Select a contact-->
         <scene sceneID="yqi-a7-M61">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="j7V-wx-GQ0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="Rou-zE-gdG">
+                    <connections>
+                        <outlet property="delegate" destination="l9I-x3-LMJ" id="KSw-z5-e4W"/>
+                        <outlet property="searchContentsController" destination="l9I-x3-LMJ" id="Jwa-Fr-bNT"/>
+                        <outlet property="searchResultsDataSource" destination="l9I-x3-LMJ" id="CAc-bi-vdw"/>
+                        <outlet property="searchResultsDelegate" destination="l9I-x3-LMJ" id="Kf8-0q-IrP"/>
+                    </connections>
+                </searchDisplayController>
                 <tableViewController id="l9I-x3-LMJ" customClass="LocalContactsTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="nlc-P0-xhc">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
@@ -230,7 +239,7 @@
                             </tableViewCell>
                         </prototypes>
                         <connections>
-                            <outlet property="dataSource" destination="l9I-x3-LMJ" id="tKV-yH-R6k"/>
+                            <outlet property="dataSource" destination="l9I-x3-LMJ" id="ETG-S0-UlP"/>
                             <outlet property="delegate" destination="l9I-x3-LMJ" id="jvz-TQ-Kw5"/>
                         </connections>
                     </tableView>
@@ -246,8 +255,10 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="searchDisplayController" destination="Rou-zE-gdG" id="tcr-Mm-083"/>
+                    </connections>
                 </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="j7V-wx-GQ0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2816" y="-675"/>
         </scene>
