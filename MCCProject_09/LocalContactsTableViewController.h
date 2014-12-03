@@ -13,7 +13,7 @@
 
 @protocol ImportContactDelegate <NSObject>
 - (void)importContactDidCancel:(LocalContactsTableViewController *)controller;
-- (void)importContact:(Contact *)contact toController:(LocalContactsTableViewController *)controller;
+- (void)importContact:(Contact *)contact fromController:(LocalContactsTableViewController *)controller;
 @end
 
 @interface LocalContactsTableViewController : UITableViewController
@@ -21,8 +21,5 @@
 @property (nonatomic, weak) id <ImportContactDelegate> delegate;
 @property (strong,nonatomic) NSArray *contactsArray;
 @property (strong, nonatomic) NSMutableArray *filteredContactsArray;
-
-- (IBAction)cancel:(id)sender;
-- (IBAction)done:(id)sender;
 
 @end

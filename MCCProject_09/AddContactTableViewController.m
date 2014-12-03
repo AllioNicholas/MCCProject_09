@@ -32,7 +32,19 @@
     [self.delegate addContactViewController:self didAddContact:contact];
 }
 
-- (void)importContact:(Contact *)contact toController:(LocalContactsTableViewController *)controller {
+- (void)importContact:(Contact *)contact fromController:(LocalContactsTableViewController *)controller {
+    if (contact) {
+        self.nameTextField.text = contact.name;
+        self.surnameTextField.text = contact.surname;
+        self.phoneTextField.text = contact.phoneNumbers[0];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Import Contact Error"
+                                                        message:@"Error during import"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles: nil];
+        [alert show];
+    }
 
 }
 

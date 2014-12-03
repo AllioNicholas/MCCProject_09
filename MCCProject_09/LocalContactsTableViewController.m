@@ -46,21 +46,13 @@
     
     self.definesPresentationContext = YES;
     
-    self.filteredContactsArray = [[NSMutableArray alloc] initWithCapacity:self.contactsArray.count];
+    self.filteredContactsArray = [[NSMutableArray alloc] initWithArray:self.contactsArray];
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-}
-
-- (IBAction)cancel:(id)sender {
-    [self.delegate importContactDidCancel:self];
-}
-
-- (IBAction)done:(id)sender {
-    [self.delegate importContact:_importContact toController:self];
 }
 
 #pragma mark - UISearchBarDelegate
@@ -102,16 +94,24 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 //TODO:
-    //    APLProduct *selectedProduct = (tableView == self.tableView) ?
-//    self.products[indexPath.row] : self.resultsTableController.filteredProducts[indexPath.row];
-//    
-//    APLDetailViewController *detailViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"APLDetailViewController"];
-//    detailViewController.product = selectedProduct; // hand off the current product to the detail view controller
-//    
-//    [self.navigationController pushViewController:detailViewController animated:YES];
-//    
-//    // note: should not be necessary but current iOS 8.0 bug (seed 4) requires it
-//    [tableView deselectRowAtIndexPath:indexPath animated:NO];
+    ABRecordRef cont;
+    if ([self.searchController isActive]) {
+        cont = (__bridge ABRecordRef)([self.filteredContactsArray objectAtIndex:indexPath.row]);
+    } else {
+        cont = CFArrayGetValueAtIndex((__bridge CFArrayRef)self.contactsArray, indexPath.row);
+    }
+    
+    ABMultiValueRef phoneNumbers = ABRecordCopyValue(cont, kABPersonPhoneProperty);
+    NSString *numb = (__bridge NSString *)ABMultiValueCopyValueAtIndex(phoneNumbers, 0);
+    
+    Contact *contact = [[Contact alloc] initWithName:CFBridgingRelease(ABRecordCopyValue(cont, kABPersonFirstNameProperty)) surname:CFBridgingRelease(ABRecordCopyValue(cont, kABPersonLastNameProperty)) andPhone:numb];
+    
+    [self.delegate importContact:contact fromController:self];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // note: should not be necessary but current iOS 8.0 bug (seed 4) requires it
+        [tableView deselectRowAtIndexPath:indexPath animated:NO];
+    }];
+    
 }
 
 #pragma mark - UISearchResultsUpdating

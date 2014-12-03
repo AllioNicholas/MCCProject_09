@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="rS3-R9-Ivy">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="rS3-R9-Ivy">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -208,15 +208,6 @@
         <!--Select a contact-->
         <scene sceneID="yqi-a7-M61">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="j7V-wx-GQ0" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <searchDisplayController id="Rou-zE-gdG">
-                    <connections>
-                        <outlet property="delegate" destination="l9I-x3-LMJ" id="KSw-z5-e4W"/>
-                        <outlet property="searchContentsController" destination="l9I-x3-LMJ" id="Jwa-Fr-bNT"/>
-                        <outlet property="searchResultsDataSource" destination="l9I-x3-LMJ" id="CAc-bi-vdw"/>
-                        <outlet property="searchResultsDelegate" destination="l9I-x3-LMJ" id="Kf8-0q-IrP"/>
-                    </connections>
-                </searchDisplayController>
                 <tableViewController id="l9I-x3-LMJ" customClass="LocalContactsTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="nlc-P0-xhc">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
@@ -243,22 +234,20 @@
                             <outlet property="delegate" destination="l9I-x3-LMJ" id="jvz-TQ-Kw5"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Select a contact" id="6hP-YH-UZF">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="yEt-zf-dDm">
-                            <connections>
-                                <action selector="cancel:" destination="l9I-x3-LMJ" id="tnO-Oe-Oaa"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="E2j-IG-LuT">
-                            <connections>
-                                <action selector="done:" destination="l9I-x3-LMJ" id="oRj-Gc-RUO"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Select a contact" id="6hP-YH-UZF"/>
                     <connections>
                         <outlet property="searchDisplayController" destination="Rou-zE-gdG" id="tcr-Mm-083"/>
                     </connections>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="j7V-wx-GQ0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="Rou-zE-gdG">
+                    <connections>
+                        <outlet property="delegate" destination="l9I-x3-LMJ" id="KSw-z5-e4W"/>
+                        <outlet property="searchContentsController" destination="l9I-x3-LMJ" id="Jwa-Fr-bNT"/>
+                        <outlet property="searchResultsDataSource" destination="l9I-x3-LMJ" id="CAc-bi-vdw"/>
+                        <outlet property="searchResultsDelegate" destination="l9I-x3-LMJ" id="Kf8-0q-IrP"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="2816" y="-675"/>
         </scene>
