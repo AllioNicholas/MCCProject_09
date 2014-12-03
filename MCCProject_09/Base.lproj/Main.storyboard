@@ -107,52 +107,6 @@
             </objects>
             <point key="canvasLocation" x="605" y="62"/>
         </scene>
-        <!--Select a contact-->
-        <scene sceneID="yqi-a7-M61">
-            <objects>
-                <tableViewController id="l9I-x3-LMJ" customClass="LocalContactsTableViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="nlc-P0-xhc">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="localContactCell" textLabel="dBc-xl-uFQ" style="IBUITableViewCellStyleDefault" id="AWO-gj-ZCM">
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="AWO-gj-ZCM" id="iht-Ac-nrS">
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="dBc-xl-uFQ">
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="l9I-x3-LMJ" id="ETG-S0-UlP"/>
-                            <outlet property="delegate" destination="l9I-x3-LMJ" id="jvz-TQ-Kw5"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" title="Select a contact" id="6hP-YH-UZF"/>
-                    <connections>
-                        <outlet property="searchDisplayController" destination="Rou-zE-gdG" id="tcr-Mm-083"/>
-                    </connections>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="j7V-wx-GQ0" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <searchDisplayController id="Rou-zE-gdG">
-                    <connections>
-                        <outlet property="delegate" destination="l9I-x3-LMJ" id="KSw-z5-e4W"/>
-                        <outlet property="searchContentsController" destination="l9I-x3-LMJ" id="Jwa-Fr-bNT"/>
-                        <outlet property="searchResultsDataSource" destination="l9I-x3-LMJ" id="CAc-bi-vdw"/>
-                        <outlet property="searchResultsDelegate" destination="l9I-x3-LMJ" id="Kf8-0q-IrP"/>
-                    </connections>
-                </searchDisplayController>
-            </objects>
-            <point key="canvasLocation" x="2816" y="-675"/>
-        </scene>
         <!--Navigation Controller-->
         <scene sceneID="Kd7-OS-ZUy">
             <objects>
@@ -310,7 +264,7 @@
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="S6M-ID-Nz2"/>
                         <barButtonItem title="Import from Address Book" id="7kV-5c-uhb">
                             <connections>
-                                <segue destination="6jc-Ff-zfv" kind="presentation" identifier="importContactSegue" id="Mwf-ZO-wHh"/>
+                                <action selector="importFromAddressBook:" destination="X8L-vm-XNC" id="IeY-1R-eNc"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="9XH-bg-xGL"/>
@@ -336,24 +290,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8On-qe-D0e" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1330" y="-674"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="4tQ-0X-WuL">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="6jc-Ff-zfv" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Umb-Ak-M80">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="l9I-x3-LMJ" kind="relationship" relationship="rootViewController" id="TVL-0c-A0G"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Vpb-8m-C6J" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2004" y="-675"/>
         </scene>
     </scenes>
 </document>

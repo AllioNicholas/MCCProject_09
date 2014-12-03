@@ -9,7 +9,12 @@
 #import "AddContactViewController.h"
 #import "Contact.h"
 
-@interface AddContactViewController ()
+#import <AddressBook/AddressBook.h>
+#import <AddressBookUI/AddressBookUI.h>
+
+@interface AddContactViewController () <ABPeoplePickerNavigationControllerDelegate>
+
+@property (nonatomic, assign) ABAddressBookRef addressBook;
 
 @end
 
@@ -34,36 +39,31 @@
     [self.delegate addContactViewController:self didAddContact:contact];
 }
 
-- (void)importContact:(Contact *)contact fromController:(LocalContactsTableViewController *)controller {
-    if (contact) {
-        self.nameTextField.text = contact.name;
-        self.surnameTextField.text = contact.surname;
-        self.phoneTextField.text = contact.phoneNumbers[0];
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Import Contact Error"
-                                                        message:@"Error during import"
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles: nil];
-        [alert show];
-    }
+- (IBAction)importFromAddressBook:(id)sender {
+    ABPeoplePickerNavigationController *picker = [[ABPeoplePickerNavigationController alloc] init];
+    picker.peoplePickerDelegate = self;
 
+    NSArray *displayedItems = [NSArray arrayWithObjects:[NSNumber numberWithInt:kABPersonPhoneProperty], nil];
+    
+    
+    picker.displayedProperties = displayedItems;
+    // Show the picker
+    [self presentViewController:picker animated:YES completion:nil];
 }
 
-- (void)importContactDidCancel:(LocalContactsTableViewController *)controller {
-    [self dismissViewControllerAnimated:YES completion:nil];
+#pragma mark ABPeoplePickerNavigationControllerDelegate methods
+- (void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker;
+{
+    [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-}
-
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([[segue identifier] isEqualToString:@"importContactSegue"]) {
-        UINavigationController *navigationController = segue.destinationViewController;
-        LocalContactsTableViewController *importContactViewController = [navigationController viewControllers][0];
-        importContactViewController.delegate = self;
-    }
+- (void)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker didSelectPerson:(ABRecordRef)person {
+    self.nameTextField.text = (__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty));
+    self.surnameTextField.text = (__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty));
+    ABMultiValueRef phoneNumbers = ABRecordCopyValue(person, kABPersonPhoneProperty);
+    NSString *phoneNumber  = (__bridge NSString *)ABMultiValueCopyValueAtIndex(phoneNumbers, 0);
+    
+    self.phoneTextField.text = phoneNumber;
 }
 
 @end

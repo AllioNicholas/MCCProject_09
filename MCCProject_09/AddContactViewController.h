@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LocalContactsTableViewController.h"
 
 @class AddContactViewController;
 @class Contact;
@@ -17,7 +16,7 @@
 - (void)addContactViewController:(AddContactViewController *)controller didAddContact:(Contact *)contact;
 @end
 
-@interface AddContactViewController : UIViewController <ImportContactDelegate, UITextFieldDelegate>
+@interface AddContactViewController : UIViewController <UITextFieldDelegate>
 
 @property (nonatomic, weak) id <AddContactViewControllerDelegate> delegate;
 
@@ -27,5 +26,6 @@
 
 - (IBAction)cancel:(id)sender;
 - (IBAction)done:(id)sender;
+- (IBAction)importFromAddressBook:(id)sender;
 
 @end
