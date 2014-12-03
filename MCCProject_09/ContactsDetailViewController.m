@@ -44,6 +44,7 @@
 }
 
 - (IBAction)saveToAddressBook:(id)sender {
+    UIAlertView *alert;
     if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized){
         //Add to the local address book
         ABAddressBookRef addrBook = ABAddressBookCreateWithOptions(NULL, nil);
@@ -54,17 +55,37 @@
         ABMutableMultiValueRef phoneNumbers = ABMultiValueCreateMutable(kABMultiStringPropertyType);
         ABMultiValueAddValueAndLabel(phoneNumbers, (__bridge CFStringRef)self.contact.phoneNumbers[0], kABPersonPhoneMainLabel, NULL);
         ABRecordSetValue(contact, kABPersonPhoneProperty, phoneNumbers, nil);
-        ABAddressBookAddRecord(addrBook, contact, nil);
-        ABAddressBookSave(addrBook, nil);
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Contact Added"
-                                                        message:[NSString stringWithFormat:@"Added contact %@ %@", self.contact.name, self.contact.surname]
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles: nil];
-        [alert show];
+        Boolean exists = FALSE;
+        NSArray *allContacts = (__bridge NSArray*)ABAddressBookCopyArrayOfAllPeople(addrBook);
+        for (id record in allContacts){
+            ABRecordRef thisContact = (__bridge ABRecordRef)record;
+            if (CFStringCompare(ABRecordCopyCompositeName(thisContact),
+                                ABRecordCopyCompositeName(contact), 0) == kCFCompareEqualTo){
+                exists = TRUE;
+            }
+        }
+        
+        if (!exists) {
+            ABAddressBookAddRecord(addrBook, contact, nil);
+            ABAddressBookSave(addrBook, nil);
+        
+            alert = [[UIAlertView alloc] initWithTitle:@"Contact Added"
+                                                            message:[NSString stringWithFormat:@"Added contact %@ %@", self.contact.name, self.contact.surname]
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles: nil];
+            [alert show];
+        } else {
+            alert = [[UIAlertView alloc] initWithTitle:@"Contact Already Exists"
+                                               message:@"This contact already exists in your Address Book"
+                                              delegate:nil
+                                     cancelButtonTitle:@"OK"
+                                     otherButtonTitles: nil];
+            [alert show];
+        }
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Add Contact"
+        alert = [[UIAlertView alloc] initWithTitle:@"Cannot Add Contact"
                                                         message:@"You must give the app permission to add the contact first: go to Settings->MCCProject_09 and allow access."
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
