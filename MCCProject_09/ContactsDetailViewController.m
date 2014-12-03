@@ -18,7 +18,6 @@
 @synthesize contact = _contact;
 @synthesize nameLabel = _nameLabel;
 @synthesize surnameLabel = _surnameLabel;
-@synthesize idLabel = _idLabel;
 @synthesize phoneLabel = _phoneLabel;
 
 - (void)configureView {
@@ -27,8 +26,21 @@
         self.navigationItem.title = [NSString stringWithFormat:@"%@", self.contact.name];
         self.nameLabel.text = [NSString stringWithFormat:@"%@", self.contact.name];
         self.surnameLabel.text = [NSString stringWithFormat:@"%@", self.contact.surname];
-        self.idLabel.text = [NSString stringWithFormat:@"%@", self.contact.contactID];
-        self.phoneLabel.text = [NSString stringWithFormat:@"%@", self.contact.phoneNumbers[0]];
+
+        NSMutableString *phoneNumbers = [[NSMutableString alloc] initWithString:@""];
+        if ([self.contact.phoneNumbers count] > 1) {
+            for (int i=0; i<self.contact.phoneNumbers.count; i++) {
+                [phoneNumbers appendFormat:@"\n%@",self.contact.phoneNumbers[i]];
+                NSLog(@"%@", phoneNumbers);
+            }
+        } else {
+            [phoneNumbers appendString:self.contact.phoneNumbers[0]];
+            NSLog(@"%@", phoneNumbers);
+        }
+        NSLog(@"%@", phoneNumbers);
+
+        self.phoneLabel.text = [NSString stringWithString:phoneNumbers];
+        
     }
 }
 

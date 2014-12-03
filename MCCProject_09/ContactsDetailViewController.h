@@ -13,7 +13,6 @@
 
 @property (weak, nonatomic) Contact *contact;
 
-@property (weak, nonatomic) IBOutlet UILabel *idLabel;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *surnameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *phoneLabel;
