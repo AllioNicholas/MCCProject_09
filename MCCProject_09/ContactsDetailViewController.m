@@ -46,8 +46,23 @@
 - (IBAction)saveToAddressBook:(id)sender {
     if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized){
         //Add to the local address book
+        ABAddressBookRef addrBook = ABAddressBookCreateWithOptions(NULL, nil);
+        ABRecordRef contact = ABPersonCreate();
         
+        ABRecordSetValue(contact, kABPersonFirstNameProperty, (__bridge CFTypeRef)(self.contact.name), NULL);
+        ABRecordSetValue(contact, kABPersonLastNameProperty, (__bridge CFTypeRef)(self.contact.surname), NULL);
+        ABMutableMultiValueRef phoneNumbers = ABMultiValueCreateMutable(kABMultiStringPropertyType);
+        ABMultiValueAddValueAndLabel(phoneNumbers, (__bridge CFStringRef)self.contact.phoneNumbers[0], kABPersonPhoneMainLabel, NULL);
+        ABRecordSetValue(contact, kABPersonPhoneProperty, phoneNumbers, nil);
+        ABAddressBookAddRecord(addrBook, contact, nil);
+        ABAddressBookSave(addrBook, nil);
         
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Contact Added"
+                                                        message:[NSString stringWithFormat:@"Added contact %@ %@", self.contact.name, self.contact.surname]
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles: nil];
+        [alert show];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Add Contact"
                                                         message:@"You must give the app permission to add the contact first: go to Settings->MCCProject_09 and allow access."

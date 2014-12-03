@@ -18,7 +18,6 @@
 
 @property (nonatomic, strong) UISearchController *searchController;
 
-
 @end
 
 @implementation LocalContactsTableViewController
@@ -47,12 +46,7 @@
     self.definesPresentationContext = YES;
     
     self.filteredContactsArray = [[NSMutableArray alloc] initWithArray:self.contactsArray];
-    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+
 }
 
 #pragma mark - UISearchBarDelegate
@@ -93,7 +87,6 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-//TODO:
     ABRecordRef cont;
     if ([self.searchController isActive]) {
         cont = (__bridge ABRecordRef)([self.filteredContactsArray objectAtIndex:indexPath.row]);
@@ -135,13 +128,6 @@
     NSMutableArray *andMatchPredicates = [NSMutableArray array];
     
     for (NSString *searchString in searchContacts) {
-        // each searchString creates an OR predicate for: name, yearIntroduced, introPrice
-        //
-        // example if searchItems contains "iphone 599 2007":
-        //      name CONTAINS[c] "iphone"
-        //      name CONTAINS[c] "599", yearIntroduced ==[c] 599, introPrice ==[c] 599
-        //      name CONTAINS[c] "2007", yearIntroduced ==[c] 2007, introPrice ==[c] 2007
-        //
         NSMutableArray *searchContactsPredicate = [NSMutableArray array];
         
         // name field matching
@@ -181,15 +167,5 @@
     self.filteredContactsArray = searchResults;
     [self.tableView reloadData];
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
