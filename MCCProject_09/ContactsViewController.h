@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <AddressBook/AddressBook.h>
-#import "AddContactTableViewController.h"
+#import "AddContactViewController.h"
 
 @interface ContactsViewController : UITableViewController <NSURLSessionDelegate, AddContactViewControllerDelegate> 
 

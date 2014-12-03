@@ -9,19 +9,19 @@
 #import <UIKit/UIKit.h>
 #import "LocalContactsTableViewController.h"
 
-@class AddContactTableViewController;
+@class AddContactViewController;
 @class Contact;
 
 @protocol AddContactViewControllerDelegate <NSObject>
-- (void)addContactViewControllerDidCancel:(AddContactTableViewController *)controller;
-- (void)addContactViewController:(AddContactTableViewController *)controller didAddContact:(Contact *)contact;
+- (void)addContactViewControllerDidCancel:(AddContactViewController *)controller;
+- (void)addContactViewController:(AddContactViewController *)controller didAddContact:(Contact *)contact;
 @end
 
-@interface AddContactTableViewController : UITableViewController <ImportContactDelegate>
+@interface AddContactViewController : UIViewController <ImportContactDelegate, UITextFieldDelegate>
 
 @property (nonatomic, weak) id <AddContactViewControllerDelegate> delegate;
 
-@property (weak, nonatomic) IBOutlet UITextField *nameTextField;
+@property (strong, nonatomic) IBOutlet UITextField *nameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *surnameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *phoneTextField;
 

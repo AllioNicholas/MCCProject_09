@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E11795BE1A1BEE3800C7F51F /* AddContactTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E11795BD1A1BEE3800C7F51F /* AddContactTableViewController.m */; };
+		E11795BE1A1BEE3800C7F51F /* AddContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E11795BD1A1BEE3800C7F51F /* AddContactViewController.m */; };
 		E16BCA7B1A25128700F1C488 /* LocalContactsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E16BCA7A1A25128700F1C488 /* LocalContactsTableViewController.m */; };
 		E1B4A0431A1C95860095A96A /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1B4A0421A1C95860095A96A /* AddressBook.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		E1B4A0461A1CD3210095A96A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1B4A0451A1CD3210095A96A /* Foundation.framework */; };
@@ -35,8 +35,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		E11795BC1A1BEE3800C7F51F /* AddContactTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddContactTableViewController.h; sourceTree = "<group>"; };
-		E11795BD1A1BEE3800C7F51F /* AddContactTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddContactTableViewController.m; sourceTree = "<group>"; };
+		E11795BC1A1BEE3800C7F51F /* AddContactViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddContactViewController.h; sourceTree = "<group>"; };
+		E11795BD1A1BEE3800C7F51F /* AddContactViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddContactViewController.m; sourceTree = "<group>"; };
 		E16BCA791A25128700F1C488 /* LocalContactsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalContactsTableViewController.h; sourceTree = "<group>"; };
 		E16BCA7A1A25128700F1C488 /* LocalContactsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalContactsTableViewController.m; sourceTree = "<group>"; };
 		E1B4A0421A1C95860095A96A /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
@@ -129,8 +129,8 @@
 				E1F016631A1684730079B061 /* Contact.m */,
 				E1E03F1A1A19434F00ADCE82 /* ContactTableViewCell.h */,
 				E1E03F1B1A19434F00ADCE82 /* ContactTableViewCell.m */,
-				E11795BC1A1BEE3800C7F51F /* AddContactTableViewController.h */,
-				E11795BD1A1BEE3800C7F51F /* AddContactTableViewController.m */,
+				E11795BC1A1BEE3800C7F51F /* AddContactViewController.h */,
+				E11795BD1A1BEE3800C7F51F /* AddContactViewController.m */,
 				E16BCA791A25128700F1C488 /* LocalContactsTableViewController.h */,
 				E16BCA7A1A25128700F1C488 /* LocalContactsTableViewController.m */,
 			);
@@ -271,7 +271,7 @@
 				E1F0163C1A1681E00079B061 /* main.m in Sources */,
 				E1F016451A1681E00079B061 /* ContactsDetailViewController.m in Sources */,
 				E16BCA7B1A25128700F1C488 /* LocalContactsTableViewController.m in Sources */,
-				E11795BE1A1BEE3800C7F51F /* AddContactTableViewController.m in Sources */,
+				E11795BE1A1BEE3800C7F51F /* AddContactViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

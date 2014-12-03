@@ -214,7 +214,7 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
     
     if ([segue.identifier isEqualToString:@"NewContact"]) {
         UINavigationController *navigationController = segue.destinationViewController;
-        AddContactTableViewController *addContactViewController = [navigationController viewControllers][0];
+        AddContactViewController *addContactViewController = [navigationController viewControllers][0];
         addContactViewController.delegate = self;
     }
 
@@ -222,12 +222,12 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
 
 #pragma mark - AddContactViewControllerDelegate
 
-- (void)addContactViewControllerDidCancel:(AddContactTableViewController *)controller
+- (void)addContactViewControllerDidCancel:(AddContactViewController *)controller
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)addContactViewController:(AddContactTableViewController *)controller didAddContact:(Contact *)contact {
+- (void)addContactViewController:(AddContactViewController *)controller didAddContact:(Contact *)contact {
     NSError *error;
     //Add contact to the server in a JSON form
     NSDictionary *rawContact = [NSDictionary dictionaryWithObjectsAndKeys:
