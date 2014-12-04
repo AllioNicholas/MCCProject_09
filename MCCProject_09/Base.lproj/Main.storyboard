@@ -169,8 +169,8 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Avy-ef-MMc">
-                                <rect key="frame" x="16" y="217" width="42" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IA4-r3-uof">
+                                <rect key="frame" x="16" y="217" width="568" height="63"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
@@ -190,7 +190,7 @@
                     <navigationItem key="navigationItem" title="Detail" id="cra-N8-TIN"/>
                     <connections>
                         <outlet property="nameLabel" destination="f4U-wn-YGo" id="7Lq-A6-0u5"/>
-                        <outlet property="phoneLabel" destination="Avy-ef-MMc" id="xXl-Di-0EH"/>
+                        <outlet property="phoneLabel" destination="IA4-r3-uof" id="E6D-6E-w9M"/>
                         <outlet property="surnameLabel" destination="fex-cz-xiB" id="cfG-96-Z0B"/>
                     </connections>
                 </viewController>

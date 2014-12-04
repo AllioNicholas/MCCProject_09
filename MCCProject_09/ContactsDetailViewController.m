@@ -30,14 +30,15 @@
         NSMutableString *phoneNumbers = [[NSMutableString alloc] initWithString:@""];
         if ([self.contact.phoneNumbers count] > 1) {
             for (int i=0; i<self.contact.phoneNumbers.count; i++) {
-                [phoneNumbers appendFormat:@"· %@\n",self.contact.phoneNumbers[i]];
+                [phoneNumbers appendFormat:@"\u2022 %@\n",self.contact.phoneNumbers[i]];
             }
         } else {
             [phoneNumbers appendString:self.contact.phoneNumbers[0]];
         }
         
-        self.phoneLabel.numberOfLines = 0;
-        self.phoneLabel.text = [NSString stringWithString:phoneNumbers];
+        self.phoneLabel.text = [NSString stringWithFormat:@"%@",phoneNumbers];
+        [self.phoneLabel setNumberOfLines:0];
+        self.phoneLabel.lineBreakMode = NSLineBreakByWordWrapping;
         [self.phoneLabel sizeToFit];
         
     }
@@ -71,8 +72,7 @@
         NSArray *allContacts = (__bridge NSArray*)ABAddressBookCopyArrayOfAllPeople(addrBook);
         for (id record in allContacts){
             ABRecordRef thisContact = (__bridge ABRecordRef)record;
-            if (CFStringCompare(ABRecordCopyCompositeName(thisContact),
-                                ABRecordCopyCompositeName(contact), 0) == kCFCompareEqualTo){
+            if (CFStringCompare(ABRecordCopyCompositeName(thisContact), ABRecordCopyCompositeName(contact), 0) == kCFCompareEqualTo){
                 exists = TRUE;
             }
         }
