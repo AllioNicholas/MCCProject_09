@@ -19,6 +19,7 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
 }
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *addContactButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *mergeContactsButton;
 @property (nonatomic, assign) ABAddressBookRef addressBook;
 @property (nonatomic, strong) NSMutableArray *contacts;
 @property (nonatomic, strong) NSURLSession *session;
@@ -30,6 +31,7 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
 @synthesize contacts = _contacts;
 @synthesize session = _session;
 @synthesize addContactButton = _addContactButton;
+@synthesize mergeContactsButton = _mergeContactsButton;
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
@@ -50,9 +52,7 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
     
     refreshControl = [[UIRefreshControl alloc]init];
     [self.tableView addSubview:refreshControl];
-    [refreshControl addTarget:self action:@selector(refreshTable) forControlEvents:UIControlEventValueChanged];
-    
-    [self downloadContactList];
+    [refreshControl addTarget:self action:@selector(checkAuthorization) forControlEvents:UIControlEventValueChanged];
     
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
     
@@ -69,6 +69,7 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
             // Update our UI if the user has granted access to their Contacts
         case  kABAuthorizationStatusAuthorized:
             NSLog(@"User authorized");
+            [self accessGrantedForAddressBook];
             break;
             // Prompt the user for access to Contacts if there is no definitive answer
         case  kABAuthorizationStatusNotDetermined :
@@ -78,12 +79,7 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
         case  kABAuthorizationStatusDenied:
         case  kABAuthorizationStatusRestricted:
         {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Privacy Warning"
-                                                            message:@"Permission was not granted for Contacts."
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles: nil];
-            [alert show];
+            [self requestAddressBookAccess];
         }
             break;
         default:
@@ -91,30 +87,27 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
     }
 }
 
+// This method is called when the user has granted access to their address book data.
+-(void)accessGrantedForAddressBook
+{
+    // Load data
+    [self refreshTable];
+}
+
 // Prompt the user for access to their Address Book data
 -(void)requestAddressBookAccess {
     ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
-                                                 if (error) {
-                                                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                                                     message:@""
-                                                                                                    delegate:nil
-                                                                                           cancelButtonTitle:@"OK"
-                                                                                           otherButtonTitles: nil];
-                                                     [alert show];
+                                                 if (granted) {
+                                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                                         [self accessGrantedForAddressBook];
+                                                         [self.addContactButton setEnabled:YES];
+                                                         [self.mergeContactsButton setEnabled:YES];
+                                                     });
+                                                 } else {
+                                                     [self.addContactButton setEnabled:NO];
+                                                     [self.mergeContactsButton setEnabled:NO];
                                                  }
                                              });
-}
-
-// Create and add a new group to the address book database
-- (void)addGroup:(NSString *)name fromAddressBook:(ABAddressBookRef)myAddressBook {
-    ABRecordRef newGroup = ABGroupCreate();
-    CFStringRef newName = CFBridgingRetain(name);
-    ABRecordSetValue(newGroup,kABGroupNameProperty,newName,NULL);
-    
-    // Add the new group
-    ABAddressBookAddRecord(myAddressBook,newGroup, NULL);
-    ABAddressBookSave(myAddressBook, NULL);
-    CFRelease(newName);
 }
 
 - (void)downloadContactList {
@@ -137,7 +130,6 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
                                                                  [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
                                                                  [self.tableView reloadData];
                                                              });
-//                                                             [spinner stopAnimating];
                                                          } else if (httpResp.statusCode == 500) {
                                                              UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Internal Server Error"
                                                                                                              message:[NSString stringWithFormat:@"HTTP Response Code: %d", httpResp.statusCode]
@@ -196,11 +188,6 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
     }];
     
     [merge resume];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Segues

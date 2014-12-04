@@ -30,16 +30,15 @@
         NSMutableString *phoneNumbers = [[NSMutableString alloc] initWithString:@""];
         if ([self.contact.phoneNumbers count] > 1) {
             for (int i=0; i<self.contact.phoneNumbers.count; i++) {
-                [phoneNumbers appendFormat:@"\n%@",self.contact.phoneNumbers[i]];
-                NSLog(@"%@", phoneNumbers);
+                [phoneNumbers appendFormat:@"· %@\n",self.contact.phoneNumbers[i]];
             }
         } else {
             [phoneNumbers appendString:self.contact.phoneNumbers[0]];
-            NSLog(@"%@", phoneNumbers);
         }
-        NSLog(@"%@", phoneNumbers);
-
+        
+        self.phoneLabel.numberOfLines = 0;
         self.phoneLabel.text = [NSString stringWithString:phoneNumbers];
+        [self.phoneLabel sizeToFit];
         
     }
 }

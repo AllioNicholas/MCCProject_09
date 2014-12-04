@@ -26,6 +26,28 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self.nameTextField setDelegate:self];
+    [self.nameTextField setReturnKeyType:UIReturnKeyDone];
+    [self.nameTextField addTarget:self
+                       action:@selector(textFieldFinished:)
+             forControlEvents:UIControlEventEditingDidEndOnExit];
+    
+    [self.surnameTextField setDelegate:self];
+    [self.surnameTextField setReturnKeyType:UIReturnKeyDone];
+    [self.surnameTextField addTarget:self
+                           action:@selector(textFieldFinished:)
+                 forControlEvents:UIControlEventEditingDidEndOnExit];
+    
+    [self.phoneTextField setDelegate:self];
+    [self.phoneTextField setReturnKeyType:UIReturnKeyDone];
+    [self.phoneTextField addTarget:self
+                           action:@selector(textFieldFinished:)
+                 forControlEvents:UIControlEventEditingDidEndOnExit];
+}
+
+- (IBAction)textFieldFinished:(id)sender
+{
+    [sender resignFirstResponder];
 }
 
 - (IBAction)cancel:(id)sender {
