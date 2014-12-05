@@ -15,10 +15,6 @@
 
 @implementation ContactsDetailViewController
 
-@synthesize contact = _contact;
-@synthesize nameLabel = _nameLabel;
-@synthesize surnameLabel = _surnameLabel;
-@synthesize phoneLabel = _phoneLabel;
 
 - (void)configureView {
     // Update the user interface for the detail item.
@@ -39,7 +35,9 @@
         self.phoneLabel.text = [NSString stringWithFormat:@"%@",phoneNumbers];
         [self.phoneLabel setNumberOfLines:0];
         self.phoneLabel.lineBreakMode = NSLineBreakByWordWrapping;
-        [self.phoneLabel sizeToFit];
+        CGSize size = [self.phoneLabel sizeThatFits:self.phoneLabel.frame.size];
+        CGRect newFrame = CGRectMake(self.phoneLabel.frame.origin.x, self.phoneLabel.frame.origin.y, size.width, size.height);
+        [self.phoneLabel setFrame:newFrame];
         
     }
 }

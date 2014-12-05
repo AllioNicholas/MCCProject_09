@@ -15,7 +15,6 @@
 
 - (void)awakeFromNib {
     // Initialization code
-    self.nameLabel.center = CGPointMake([[UIScreen mainScreen] bounds].size.width / 2, 50);
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
