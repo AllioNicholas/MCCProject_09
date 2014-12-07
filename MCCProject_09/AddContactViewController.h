@@ -11,6 +11,9 @@
 @class AddContactViewController;
 @class Contact;
 
+/*
+ * Add new contact delegate
+ */
 @protocol AddContactViewControllerDelegate <NSObject>
 - (void)addContactViewControllerDidCancel:(AddContactViewController *)controller;
 - (void)addContactViewController:(AddContactViewController *)controller didAddContact:(Contact *)contact;

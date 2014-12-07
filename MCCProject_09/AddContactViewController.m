@@ -45,22 +45,34 @@
                  forControlEvents:UIControlEventEditingDidEndOnExit];
 }
 
+/*
+ * Dismiss keyboard method
+ */
 - (IBAction)textFieldFinished:(id)sender
 {
     [sender resignFirstResponder];
 }
 
+/*
+ * Cancel button pressed
+ */
 - (IBAction)cancel:(id)sender {
     [self.view endEditing:YES];
     [self.delegate addContactViewControllerDidCancel:self];
 }
 
+/*
+ * Done button pressed
+ */
 - (IBAction)done:(id)sender {
     [self.view endEditing:YES];
     Contact *contact = [[Contact alloc] initWithName:self.nameTextField.text surname:self.surnameTextField.text andPhone:self.phoneTextField.text];
     [self.delegate addContactViewController:self didAddContact:contact];
 }
 
+/*
+ * Shows view with local contacts to be choose
+ */
 - (IBAction)importFromAddressBook:(id)sender {
     ABPeoplePickerNavigationController *picker = [[ABPeoplePickerNavigationController alloc] init];
     picker.peoplePickerDelegate = self;
@@ -74,11 +86,15 @@
 }
 
 #pragma mark ABPeoplePickerNavigationControllerDelegate methods
+
 - (void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker;
 {
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
+/*
+ * Fills textfields with selected person information
+ */
 - (void)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker didSelectPerson:(ABRecordRef)person {
     self.nameTextField.text = (__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty));
     self.surnameTextField.text = (__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty));

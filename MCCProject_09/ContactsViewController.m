@@ -22,7 +22,7 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *mergeContactsButton;
 @property (nonatomic, assign) ABAddressBookRef addressBook;
 @property (nonatomic, strong) NSMutableArray *contacts;
-@property (nonatomic, strong) NSURLSession *session;
+@property (nonatomic, strong) NSURLSession *session;                     // -> Object to handle server request
 
 @end
 
@@ -33,6 +33,9 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
 @synthesize addContactButton = _addContactButton;
 @synthesize mergeContactsButton = _mergeContactsButton;
 
+/*
+ * Session propreties configuration
+ */
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
@@ -46,6 +49,10 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
     }
     return self;
 }
+
+/*
+ * Initialization "pull to refresh" controll and AddressBook authorization
+ */
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -63,6 +70,9 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
     
 }
 
+/*
+ * Method called everytime before each operation
+ */
 -(void)checkAuthorization {
     switch (ABAddressBookGetAuthorizationStatus())
     {
@@ -87,14 +97,18 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
     }
 }
 
-// This method is called when the user has granted access to their address book data.
+/*
+ * This method is called when the user has granted access to their address book data.
+ */
 -(void)accessGrantedForAddressBook
 {
     // Load data
     [self refreshTable];
 }
 
-// Prompt the user for access to their Address Book data
+/*
+ * Prompt the user for access to their Address Book data
+ */
 -(void)requestAddressBookAccess {
     ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
                                                  if (granted) {
@@ -110,12 +124,19 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
                                              });
 }
 
+/*
+ * Download contact list from the server and related error handling
+ */
+
 - (void)downloadContactList {
+    //Build contact URL
     NSString *contactString = [NSString stringWithFormat:@"%@/contacts", _masterURL];
     NSURL *contactURL = [NSURL URLWithString:contactString];
     
+    //Activity indicator ON
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;    
     
+    //Download data
     NSURLSessionDataTask *dataTask = [self.session dataTaskWithURL:contactURL
                                                  completionHandler:^(NSData *data,
                                                                      NSURLResponse *response,
@@ -124,6 +145,7 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
                                                      if (!error) {
                                                          NSLog(@"%d", httpResp.statusCode);
                                                          if (httpResp.statusCode == 200) {
+                                                             //If all ok, parse JSON
                                                              [self parseJSONWithData:data];
                                                              
                                                              dispatch_async(dispatch_get_main_queue(), ^{
@@ -151,6 +173,9 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
     [dataTask resume];
 }
 
+/*
+ * Ceates contact list by parsing response data
+ */
 - (void)parseJSONWithData:(NSData*)data {
     NSError *jsonError;
     NSArray *rawContacts = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
@@ -165,6 +190,9 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
     }
 }
 
+/*
+ * Merga contact function: POST request to the server
+ */
 - (IBAction)mergeContacts:(id)sender {
     //Merge contacts with side effect
     NSURL *postURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/contacts/merge", _masterURL]];
@@ -192,6 +220,9 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
 
 #pragma mark - Segues
 
+/*
+ * Prepare data to be displayed in the next view
+ */
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"showContactDetail"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
@@ -209,11 +240,17 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
 
 #pragma mark - AddContactViewControllerDelegate
 
+/*
+ * User pressed "cancel", no additional actions needed
+ */
 - (void)addContactViewControllerDidCancel:(AddContactViewController *)controller
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+/*
+ * New contact created, build dictionary and JSON with new contact data and send it to the server
+ */
 - (void)addContactViewController:(AddContactViewController *)controller didAddContact:(Contact *)contact {
     NSError *error;
     //Add contact to the server in a JSON form
@@ -237,7 +274,7 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
                 NSHTTPURLResponse *httpResp = (NSHTTPURLResponse*) response;
                 if (!error && httpResp.statusCode == 201) {
                     NSLog(@"Contact correctly created and pushed");
-                    //parse response data to extract contact id of the newly created one
+                    //Parse response data to extract contact id of the newly created one
                     NSError *jsonError;
                     NSArray *rawContact = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
                     if(!jsonError) {
@@ -287,7 +324,9 @@ NSString *_masterURL = @"http://130.233.42.182:8080";
     return YES;
 }
 
-// Handle the deletion of a contact
+/*
+ * Handle the deletion of a contact
+ */
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         //Send DELETE to the server and delet contact

@@ -44,15 +44,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
     [self configureView];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
+/*
+ * Save current contact to the local Address Book with error and authorization handling
+ */
 - (IBAction)saveToAddressBook:(id)sender {
     UIAlertView *alert;
     if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized){

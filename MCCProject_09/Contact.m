@@ -15,6 +15,9 @@
 @synthesize phoneNumbers = _phoneNumbers;
 @synthesize surname = _surname;
 
+/*
+ * Contact initializer with dictionary
+ */
 -(id)initWithJSONDictionary:(NSDictionary*)dict {
     if(self = [self init]) {
         _name = [dict objectForKey:@"name"];
@@ -27,10 +30,12 @@
             _phoneNumbers = [[NSMutableArray alloc] initWithObjects:[dict objectForKey:@"phone"], nil];
         
     }
-    
     return self;
 }
 
+/*
+ * Contact initializer with name, surname, phone number
+ */
 -(id)initWithName:(NSString*)name surname:(NSString*)surname andPhone:(NSString*)phone {
     if(self = [self init]) {
         _name = name;
